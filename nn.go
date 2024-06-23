@@ -53,8 +53,8 @@ func (d *Drop) div(other *Drop) *Drop {
 	out := &Drop{value: (d.value / other.value), prev: []*Drop{d, other}}
 
 	_backward := func() {
-		d.grad = out.grad * other.value
-		other.grad = -out.grad * d.value / (other.value * other.value)
+		d.grad += out.grad * other.value
+		other.grad += -out.grad * d.value / (other.value * other.value)
 	}
 	out._backward = _backward
 	return out
@@ -105,13 +105,55 @@ func (d *Drop) sigmoid() *Drop {
 	return out
 }
 
-func main() {
-	a := &Drop{value: 4}
-	// b := &Drop{value: 5}
-	// c := &Drop{value: 2}
+func (d *Drop) backward() {
+	var topo []*Drop
+	var visited []*Drop
 
-	// result_0 := a.mul(b)
-	// result_1 := result_0.add(c)
+	contains := func(values []*Drop, value *Drop) bool {
+		for _, item := range values {
+			if item == value {
+				return true
+			}
+		}
+		return false
+	}
+
+	var build_topo func(*Drop)
+	build_topo = func(v *Drop) {
+		if !contains(visited, v) {
+			visited = append(visited, v)
+			for _, child := range v.prev {
+				build_topo(child)
+			}
+			topo = append(topo, v)
+		}
+	}
+	build_topo(d)
+
+	for i, j := 0, len(topo)-1; i < j; i, j = i+1, j-1 {
+		topo[i], topo[j] = topo[j], topo[i]
+	}
+	d.grad = 1
+	for _, v := range topo {
+		v._backward()
+	}
+}
+
+func main() {
+	a := &Drop{value: 4, _backward: func() {}}
+	b := &Drop{value: 5, _backward: func() {}}
+	c := &Drop{value: 2, _backward: func() {}}
+
+	result_0 := a.mul(b)
+	result_1 := result_0.add(c)
+
+	// result_1.grad = 0
+	result_1.backward()
+
+	fmt.Println(a.grad)
+	fmt.Println(b.grad)
+	fmt.Println(c.grad)
+
 	// result_1.grad = 1
 
 	// result_1._backward()
@@ -122,8 +164,8 @@ func main() {
 	// fmt.Println(c.grad)
 
 	// print((a.relu()))
-	var d = a.tanh()
-	d.grad = 10
-	d._backward()
-	fmt.Println(a)
+	// var d = a.tanh()
+	// d.grad = 10
+	// d._backward()
+	// fmt.Println(a)
 }
