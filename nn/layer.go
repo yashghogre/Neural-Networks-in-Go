@@ -1,43 +1,35 @@
 package nn
 
-import (
-	// "fmt"
-	"math/rand"
-)
+import "fmt"
 
-type Neuron struct {
-	W []*Drop
-	B *Drop
+type Layer struct {
+	N []*Neuron
 }
 
-func NewNeuron(n_in int) *Neuron {
-	tmp_arr := make([]float32, n_in)
-	tmp_w := make([]*Drop, n_in)
+func NewLayer(n_in int, n_neu int) *Layer {
+	n_arr := make([]*Neuron, n_neu)
 
-	for i := 0; i < n_in; i++ {
-		tmp_arr[i] = rand.Float32()
+	for i := 0; i < n_neu; i++ {
+		n_arr[i] = NewNeuron(n_in)
 	}
 
-	for i := 0; i < n_in; i++ {
-		tmp_n := NewDrop(tmp_arr[i])
-		tmp_w[i] = tmp_n
-	}
-
-	tmp_b := NewDrop(rand.Float32())
-
-	return &Neuron{W: tmp_w, B: tmp_b}
+	return &Layer{N: n_arr}
 }
 
-func (n *Neuron) Forward_Neuron(inputs []float32) *Drop {
-	inp_arr := NewDropArray(inputs)
-	result := NewDrop(0)
+func (l *Layer) Forward_Layer(inputs []float32) []*Drop {
+	out_arr := make([]*Drop, len(l.N))
 
-	for i := 0; i < len(inputs); i++ {
-		result = result.Add(inp_arr[i].Mul(n.W[i]))
+	for i := 0; i < len(l.N); i++ {
+		out_arr[i] = (l.N[i]).Forward_Neuron(inputs)
 	}
 
-	result = result.Add(n.B)
-	result = result.Relu()
+	return out_arr
+}
 
-	return result
+func (l *Layer) Layer_Outputs(inputs []float32) {
+
+	out_arr := l.Forward_Layer(inputs)
+	for i := 0; i < len(l.N); i++ {
+		fmt.Println("Output from Neuron ", i+1, ": ", out_arr[i])
+	}
 }

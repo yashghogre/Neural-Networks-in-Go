@@ -52,13 +52,20 @@ func main() {
 	// fmt.Println("Value final: ", o.Value)
 	// fmt.Printf("\n\n")
 
-	n1 := nn.NewNeuron(4)
-	var inputs = []float32{2, 4, 1, 4}
+	// n1 := nn.NewNeuron(4)
+	// var inputs = []float32{2, 4, 1, 4}
 
-	n1_forward := n1.Forward_Neuron(inputs)
-	for i := range len(inputs) {
-		fmt.Println(n1.W[i])
-	}
-	fmt.Println(n1.B)
-	fmt.Println(n1_forward)
+	// n1_forward := n1.Forward_Neuron(inputs)
+	// for i := range len(inputs) {
+	// 	fmt.Println(n1.W[i])
+	// }
+	// fmt.Println(n1.B)
+	// fmt.Println(n1_forward)
+
+	var x = []float32{3, 4, 2}
+	l := nn.NewLayer(3, 3)
+	fmt.Println(l.N[0])
+	var out = l.Forward_Layer(x)
+	fmt.Println(out)
+	l.Layer_Outputs(x)
 }
