@@ -62,10 +62,14 @@ func main() {
 	// fmt.Println(n1.B)
 	// fmt.Println(n1_forward)
 
-	var x = []float32{3, 4, 2}
-	l := nn.NewLayer(3, 3)
-	fmt.Println(l.N[0])
-	var out = l.Forward_Layer(x)
-	fmt.Println(out)
-	l.Layer_Outputs(x)
+	// var x = []float32{3, 4, 2}
+	// l := nn.NewLayer(3, 3)
+	// fmt.Println(l.N[0])
+	// var out = l.Forward_Layer(x)
+	// fmt.Println(out)
+	// l.Layer_Outputs(x)
+
+	tmp := []int{2, 3, 4}
+	mlp := nn.NewMLP(5, tmp)
+	fmt.Println(mlp.Layers[0])
 }

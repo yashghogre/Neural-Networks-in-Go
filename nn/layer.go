@@ -6,7 +6,7 @@ type Layer struct {
 	N []*Neuron
 }
 
-func NewLayer(n_in int, n_neu int) *Layer {
+func NewLayer(n_in int, n_neu int) *Layer { // n_in is the number of inputs and n_neu is the number of neurons
 	n_arr := make([]*Neuron, n_neu)
 
 	for i := 0; i < n_neu; i++ {

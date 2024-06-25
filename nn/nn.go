@@ -29,6 +29,16 @@ func NewDropArray(value []float32) []*Drop {
 	return drop_array
 }
 
+func DropArrayToFloat(drops []*Drop) []float32 {
+	float_arr := make([]float32, len(drops))
+
+	for i := 0; i < len(drops); i++ {
+		float_arr[i] = drops[i].Value
+	}
+
+	return float_arr
+}
+
 func (d *Drop) GetItem() {
 	fmt.Println("( Drop: ", d.Value, ")")
 }
