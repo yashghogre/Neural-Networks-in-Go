@@ -29,6 +29,19 @@ func NewDropArray(value []float32) []*Drop {
 	return drop_array
 }
 
+func NewDropMatrix(value [][]float32) [][]*Drop {
+	tmp_arr := make([][]*Drop, len(value))
+
+	for i, row := range value {
+		tmp_arr[i] = make([]*Drop, len(row))
+		for j, val := range row {
+			tmp_arr[i][j] = NewDrop(val)
+		}
+	}
+
+	return tmp_arr
+}
+
 func DropArrayToFloat(drops []*Drop) []float32 {
 	float_arr := make([]float32, len(drops))
 
@@ -168,4 +181,33 @@ func (d *Drop) Backward() {
 	for _, v := range topo {
 		v.backward()
 	}
+}
+
+func MatMul(mat1 [][]float32, mat2 [][]float32) [][]*Drop {
+
+	if len(mat1[0]) != len(mat2) {
+		fmt.Println("Can't multiply matrices with improper dimensions. Can't multiply matrix [", len(mat1), "x", len(mat1[0]), "] and matrix [", len(mat2), "x", len(mat2[0]), "]")
+	}
+	rows := len(mat1)
+	cols := len(mat2[0])
+	result_mat := make([][]*Drop, rows)
+
+	for i := range result_mat {
+		result_mat[i] = make([]*Drop, cols)
+	}
+
+	mat1_drop := NewDropMatrix(mat1)
+	mat2_drop := NewDropMatrix(mat2)
+
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			sum := float32(0)
+			for k := 0; k < len(mat1_drop[0]); k++ {
+				sum += mat1_drop[i][k].Value * mat2_drop[k][j].Value
+			}
+			result_mat[i][j] = NewDrop(sum)
+		}
+	}
+
+	return result_mat
 }

@@ -69,7 +69,19 @@ func main() {
 	// fmt.Println(out)
 	// l.Layer_Outputs(x)
 
-	tmp := []int{2, 3, 4}
-	mlp := nn.NewMLP(5, tmp)
-	fmt.Println(mlp.Layers[0])
+	// tmp := []int{2, 3, 4}
+	// inputs := []float32{5, 4, 5}
+	// mlp := nn.NewMLP(3, tmp)
+	// mlp_f := mlp.Forward_MLP(inputs)
+	// fmt.Println(mlp_f[0])
+
+	tmp_arr := [][]float32{{3, 2, 1}, {5, 4, 3}}
+	tmp_arr_1 := [][]float32{{1, 3}, {2, 4}, {4, 6}}
+
+	fmt.Println(len(tmp_arr[0]))
+	tmp_arr_Drop := nn.NewDropMatrix(tmp_arr)
+	fmt.Println(tmp_arr_Drop)
+
+	aa := nn.MatMul(tmp_arr, tmp_arr_1)
+	fmt.Println(aa[0][0])
 }
